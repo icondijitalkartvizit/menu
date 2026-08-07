@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastane Menüsü</title>
+    <style>
+        /* =========================================================
+           KONSOL / YÖNETİM BÖLÜMÜ (DEĞİŞTİRECEĞİN VERİLER)
+           Tırnak içlerindeki değerleri kendine göre düzenle.
+           ========================================================= */
+        :root {
+            /* GENEL BİLGİLER */
+            --para-birimi: "TL";
+            --banner-resmi: "https://via.placeholder.com/800x400";
+            --pastane-adi: "PASTANE İSMİ";
+            --alt-baslik: "Lezzetin Ve Kalitenin Adresi";
+
+            /* KATEGORİ BİLGİLERİ (İsim ve Resimleri) */
+            --kat-1-isim: "Kategori 1"; --kat-1-resim: "https://via.placeholder.com/100";
+            --kat-2-isim: "Kategori 2"; --kat-2-resim: "https://via.placeholder.com/100";
+            --kat-3-isim: "Kategori 3"; --kat-3-resim: "https://via.placeholder.com/100";
+            --kat-4-isim: "Kategori 4"; --kat-4-resim: "https://via.placeholder.com/100";
+            --kat-5-isim: "Kategori 5"; --kat-5-resim: "https://via.placeholder.com/100";
+            --kat-6-isim: "Kategori 6"; --kat-6-resim: "https://via.placeholder.com/100";
+
+            /* KATEGORİ 1 ÜRÜNLERİ (10 Ürün) */
+            --k1-u1-resim: "https://via.placeholder.com/100"; --k1-u1-isim: "Ürün 1"; --k1-u1-fiyat: "00";
+            --k1-u2-resim: "https://via.placeholder.com/100"; --k1-u2-isim: "Ürün 2"; --k1-u2-fiyat: "00";
+            --k1-u3-resim: "https://via.placeholder.com/100"; --k1-u3-isim: "Ürün 3"; --k1-u3-fiyat: "00";
+            --k1-u4-resim: "https://via.placeholder.com/100"; --k1-u4-isim: "Ürün 4"; --k1-u4-fiyat: "00";
+            --k1-u5-resim: "https://via.placeholder.com/100"; --k1-u5-isim: "Ürün 5"; --k1-u5-fiyat: "00";
+            --k1-u6-resim: "https://via.placeholder.com/100"; --k1-u6-isim: "Ürün 6"; --k1-u6-fiyat: "00";
+            --k1-u7-resim: "https://via.placeholder.com/100"; --k1-u7-isim: "Ürün 7"; --k1-u7-fiyat: "00";
+            --k1-u8-resim: "https://via.placeholder.com/100"; --k1-u8-isim: "Ürün 8"; --k1-u8-fiyat: "00";
+            --k1-u9-resim: "https://via.placeholder.com/100"; --k1-u9-isim: "Ürün 9"; --k1-u9-fiyat: "00";
+            --k1-u10-resim: "https://via.placeholder.com/100"; --k1-u10-isim: "Ürün 10"; --k1-u10-fiyat: "00";
+
+            /* KATEGORİ 2 ÜRÜNLERİ (10 Ürün) */
+            --k2-u1-resim: "https://via.placeholder.com/100"; --k2-u1-isim: "Ürün 1"; --k2-u1-fiyat: "00";
+            --k2-u2-resim: "https://via.placeholder.com/100"; --k2-u2-isim: "Ürün 2"; --k2-u2-fiyat: "00";
+            --k2-u3-resim: "https://via.placeholder.com/100"; --k2-u3-isim: "Ürün 3"; --k2-u3-fiyat: "00";
+            --k2-u4-resim: "https://via.placeholder.com/100"; --k2-u4-isim: "Ürün 4"; --k2-u4-fiyat: "00";
+            --k2-u5-resim: "https://via.placeholder.com/100"; --k2-u5-isim: "Ürün 5"; --k2-u5-fiyat: "00";
+            --k2-u6-resim: "https://via.placeholder.com/100"; --k2-u6-isim: "Ürün 6"; --k2-u6-fiyat: "00";
+            --k2-u7-resim: "https://via.placeholder.com/100"; --k2-u7-isim: "Ürün 7"; --k2-u7-fiyat: "00";
+            --k2-u8-resim: "https://via.placeholder.com/100"; --k2-u8-isim: "Ürün 8"; --k2-u8-fiyat: "00";
+            --k2-u9-resim: "https://via.placeholder.com/100"; --k2-u9-isim: "Ürün 9"; --k2-u9-fiyat: "00";
+            --k2-u10-resim: "https://via.placeholder.com/100"; --k2-u10-isim: "Ürün 10"; --k2-u10-fiyat: "00";
+
+            /* KATEGORİ 3 ÜRÜNLERİ (10 Ürün) */
+            --k3-u1-resim: "https://via.placeholder.com/100"; --k3-u1-isim: "Ürün 1"; --k3-u1-fiyat: "00";
+            --k3-u2-resim: "https://via.placeholder.com/100"; --k3-u2-isim: "Ürün 2"; --k3-u2-fiyat: "00";
+            --k3-u3-resim: "https://via.placeholder.com/100"; --k3-u3-isim: "Ürün 3"; --k3-u3-fiyat: "00";
+            --k3-u4-resim: "https://via.placeholder.com/100"; --k3-u4-isim: "Ürün 4"; --k3-u4-fiyat: "00";
+            --k3-u5-resim: "https://via.placeholder.com/100"; --k3-u5-isim: "Ürün 5"; --k3-u5-fiyat: "00";
+            --k3-u6-resim: "https://via.placeholder.com/100"; --k3-u6-isim: "Ürün 6"; --k3-u6-fiyat: "00";
+            --k3-u7-resim: "https://via.placeholder.com/100"; --k3-u7-isim: "Ürün 7"; --k3-u7-fiyat: "00";
+            --k3-u8-resim: "https://via.placeholder.com/100"; --k3-u8-isim: "Ürün 8"; --k3-u8-fiyat: "00";
+            --k3-u9-resim: "https://via.placeholder.com/100"; --k3-u9-isim: "Ürün 9"; --k3-u9-fiyat: "00";
+            --k3-u10-resim: "https://via.placeholder.com/100"; --k3-u10-isim: "Ürün 10"; --k3-u10-fiyat: "00";
+
+            /* KATEGORİ 4 ÜRÜNLERİ (10 Ürün) */
+            --k4-u1-resim: "https://via.placeholder.com/100"; --k4-u1-isim: "Ürün 1"; --k4-u1-fiyat: "00";
+            --k4-u2-resim: "https://via.placeholder.com/100"; --k4-u2-isim: "Ürün 2"; --k4-u2-fiyat: "00";
+            --k4-u3-resim: "https://via.placeholder.com/100"; --k4-u3-isim: "Ürün 3"; --k4-u3-fiyat: "00";
+            --k4-u4-resim: "https://via.placeholder.com/100"; --k4-u4-isim: "Ürün 4"; --k4-u4-fiyat: "00";
+            --k4-u5-resim: "https://via.placeholder.com/100"; --k4-u5-isim: "Ürün 5"; --k4-u5-fiyat: "00";
+            --k4-u6-resim: "https://via.placeholder.com/100"; --k4-u6-isim: "Ürün 6"; --k4-u6-fiyat: "00";
+            --k4-u7-resim: "https://via.placeholder.com/100"; --k4-u7-isim: "Ürün 7"; --k4-u7-fiyat: "00";
+            --k4-u8-resim: "https://via.placeholder.com/100"; --k4-u8-isim: "Ürün 8"; --k4-u8-fiyat: "00";
+            --k4-u9-resim: "https://via.placeholder.com/100"; --k4-u9-isim: "Ürün 9"; --k4-u9-fiyat: "00";
+            --k4-u10-resim: "https://via.placeholder.com/100"; --k4-u10-isim: "Ürün 10"; --k4-u10-fiyat: "00";
+
+            /* KATEGORİ 5 ÜRÜNLERİ (10 Ürün) */
+            --k5-u1-resim: "https://via.placeholder.com/100"; --k5-u1-isim: "Ürün 1"; --k5-u1-fiyat: "00";
+            --k5-u2-resim: "https://via.placeholder.com/100"; --k5-u2-isim: "Ürün 2"; --k5-u2-fiyat: "00";
+            --k5-u3-resim: "https://via.placeholder.com/100"; --k5-u3-isim: "Ürün 3"; --k5-u3-fiyat: "00";
+            --k5-u4-resim: "https://via.placeholder.com/100"; --k5-u4-isim: "Ürün 4"; --k5-u4-fiyat: "00";
+            --k5-u5-resim: "https://via.placeholder.com/100"; --k5-u5-isim: "Ürün 5"; --k5-u5-fiyat: "00";
+            --k5-u6-resim: "https://via.placeholder.com/100"; --k5-u6-isim: "Ürün 6"; --k5-u6-fiyat: "00";
+            --k5-u7-resim: "https://via.placeholder.com/100"; --k5-u7-isim: "Ürün 7"; --k5-u7-fiyat: "00";
+            --k5-u8-resim: "https://via.placeholder.com/100"; --k5-u8-isim: "Ürün 8"; --k5-u8-fiyat: "00";
+            --k5-u9-resim: "https://via.placeholder.com/100"; --k5-u9-isim: "Ürün 9"; --k5-u9-fiyat: "00";
+            --k5-u10-resim: "https://via.placeholder.com/100"; --k5-u10-isim: "Ürün 10"; --k5-u10-fiyat: "00";
+
+            /* KATEGORİ 6 ÜRÜNLERİ (10 Ürün) */
+            --k6-u1-resim: "https://via.placeholder.com/100"; --k6-u1-isim: "Ürün 1"; --k6-u1-fiyat: "00";
+            --k6-u2-resim: "https://via.placeholder.com/100"; --k6-u2-isim: "Ürün 2"; --k6-u2-fiyat: "00";
+            --k6-u3-resim: "https://via.placeholder.com/100"; --k6-u3-isim: "Ürün 3"; --k6-u3-fiyat: "00";
+            --k6-u4-resim: "https://via.placeholder.com/100"; --k6-u4-isim: "Ürün 4"; --k6-u4-fiyat: "00";
+            --k6-u5-resim: "https://via.placeholder.com/100"; --k6-u5-isim: "Ürün 5"; --k6-u5-fiyat: "00";
+            --k6-u6-resim: "https://via.placeholder.com/100"; --k6-u6-isim: "Ürün 6"; --k6-u6-fiyat: "00";
+            --k6-u7-resim: "https://via.placeholder.com/100"; --k6-u7-isim: "Ürün 7"; --k6-u7-fiyat: "00";
+            --k6-u8-resim: "https://via.placeholder.com/100"; --k6-u8-isim: "Ürün 8"; --k6-u8-fiyat: "00";
+            --k6-u9-resim: "https://via.placeholder.com/100"; --k6-u9-isim: "Ürün 9"; --k6-u9-fiyat: "00";
+            --k6-u10-resim: "https://via.placeholder.com/100"; --k6-u10-isim: "Ürün 10"; --k6-u10-fiyat: "00";
+        }
+
+        /* TASARIM VE STİLLER */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+
+        /* BANNER VE BAŞLIK */
+        .banner-container { position: relative; width: 100%; height: 200px; overflow: hidden; background: #222; }
+        .banner-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .banner-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%; }
+        .banner-text h1 { margin: 0; font-size: 26px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 1px; }
+        .banner-text p { margin: 5px 0 0 0; font-size: 14px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); opacity: 0.9; }
+
+        .content { padding: 20px; }
+
+        /* KATEGORİ LİSTESİ */
+        .category-card { display: flex; align-items: center; background: #fff; border: 1px solid #eee; border-radius: 10px; margin-bottom: 15px; padding: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .category-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .category-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .category-card .title { font-size: 18px; font-weight: 600; color: #2c3e50; }
+
+        /* ÜRÜN LİSTESİ */
+        .page-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .back-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 15px; }
+        .category-title-header { font-size: 20px; margin: 0; color: #c0392b; border-bottom: 2px solid #c0392b; padding-bottom: 5px; width: 100%; }
+
+        .menu-item { display: flex; background: white; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
+        .menu-item img { width: 75px; height: 75px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .item-details { display: flex; flex-direction: column; }
+        .item-title { font-size: 16px; font-weight: 600; color: #333; }
+        .item-price { font-size: 15px; color: #27ae60; font-weight: bold; margin-top: 5px; }
+        .item-price::after { content: " " var(--para-birimi); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ANA SAYFA KISMI -->
+    <div id="home-page">
+        <!-- BANNER VE BAŞLIKLAR -->
+        <div class="banner-container">
+            <img id="banner-img" src="" alt="Banner">
+            <div class="banner-text">
+                <h1 id="pastane-adi"></h1>
+                <p id="alt-baslik"></p>
+            </div>
+        </div>
+
+        <!-- KATEGORİLER -->
+        <div class="content">
+            <h3 style="margin-top:0; color:#555;">Kategoriler</h3>
+            <div id="category-list"></div>
+        </div>
+    </div>
+
+    <!-- ÜRÜNLER SAYFASI (DETAY) -->
+    <div id="detail-page" class="content hidden">
+        <div class="page-header">
+            <button class="back-btn" onclick="anaSayfayaDon()">&larr; Geri</button>
+            <h2 id="secilen-kategori-baslik" class="category-title-header"></h2>
+        </div>
+        <div id="product-list"></div>
+    </div>
+</div>
+
+<script>
+    const styles = getComputedStyle(document.documentElement);
+
+    function cssOku(degisken) {
+        return styles.getPropertyValue(degisken).replace(/"/g, '').trim();
+    }
+
+    // Ana Sayfa Yükleyici
+    function anaSayfaYukle() {
+        document.getElementById('banner-img').src = cssOku('--banner-resmi');
+        document.getElementById('pastane-adi').innerText = cssOku('--pastane-adi');
+        document.getElementById('alt-baslik').innerText = cssOku('--alt-baslik');
+
+        const catList = document.getElementById('category-list');
+        catList.innerHTML = '';
+
+        for (let i = 1; i <= 6; i++) {
+            const isim = cssOku(`--kat-${i}-isim`);
+            const resim = cssOku(`--kat-${i}-resim`);
+
+            if (isim && isim !== "") {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => kategoriAc(i, isim);
+                card.innerHTML = `
+                    <img src="${resim}" alt="${isim}">
+                    <div class="title">${isim}</div>
+                `;
+                catList.appendChild(card);
+            }
+        }
+    }
+
+    // Kategoriye Tıklayınca Ürünleri Açma
+    function kategoriAc(katNo, katIsmi) {
+        document.getElementById('home-page').classList.add('hidden');
+        document.getElementById('detail-page').classList.remove('hidden');
+        document.getElementById('secilen-kategori-baslik').innerText = katIsmi;
+
+        const prodList = document.getElementById('product-list');
+        prodList.innerHTML = '';
+
+        for (let u = 1; u <= 10; u++) {
+            const resim = cssOku(`--k${katNo}-u${u}-resim`);
+            const isim = cssOku(`--k${katNo}-u${u}-isim`);
+            const fiyat = cssOku(`--k${katNo}-u${u}-fiyat`);
+
+            const item = document.createElement('div');
+            item.className = 'menu-item';
+            item.innerHTML = `
+                <img src="${resim}" alt="${isim}">
+                <div class="item-details">
+                    <div class="item-title">${isim}</div>
+                    <div class="item-price">${fiyat}</div>
+                </div>
+            `;
+            prodList.appendChild(item);
+        }
+        window.scrollTo(0, 0);
+    }
+
+    // Geri Butonu
+    function anaSayfayaDon() {
+        document.getElementById('detail-page').classList.add('hidden');
+        document.getElementById('home-page').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    // Uygulamayı Başlat
+    anaSayfaYukle();
+</script>
+
+</body>
+  </html>
+  
