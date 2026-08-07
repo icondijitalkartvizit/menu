@@ -6,11 +6,9 @@
     <title>Pastane Menüsü</title>
     <style>
         /* =========================================================
-           KONSOL / YÖNETİM BÖLÜMÜ (DEĞİŞTİRECEĞİN VERİLER)
-           Tırnak içlerindeki değerleri kendine göre düzenle.
+           KONSOL / YÖNETİM BÖLÜMÜ (EKSİKSİZ LA VIE MENÜSÜ)
            ========================================================= */
         :root {
-        
             /* GENEL BİLGİLER */
             --para-birimi: "₺";
             --banner-resmi: "https://via.placeholder.com/800x400";
@@ -20,12 +18,12 @@
             /* KATEGORİ BİLGİLERİ */
             --kat-1-isim: "Soğuk İçecekler"; --kat-1-resim: "https://via.placeholder.com/100";
             --kat-2-isim: "Sıcak İçecekler"; --kat-2-resim: "https://via.placeholder.com/100";
-            --kat-3-isim: "Tatlı ve Pasta Çeşitleri"; --kat-3-resim: "https://via.placeholder.com/100";
+            --kat-3-isim: "Tatlı & Pasta Çeşitleri"; --kat-3-resim: "https://via.placeholder.com/100";
             --kat-4-isim: "Cup Tatlı Çeşitleri"; --kat-4-resim: "https://via.placeholder.com/100";
             --kat-5-isim: "Dondurma Çeşitleri"; --kat-5-resim: "https://via.placeholder.com/100";
             --kat-6-isim: "Enerji İçecekleri"; --kat-6-resim: "https://via.placeholder.com/100";
 
-            /* KATEGORİ 1: SOĞUK İÇECEKLER */
+            /* KATEGORİ 1: SOĞUK İÇECEKLER (24 Ürün) */
             --k1-u1-resim: "https://via.placeholder.com/100"; --k1-u1-isim: "Su"; --k1-u1-fiyat: "15";
             --k1-u2-resim: "https://via.placeholder.com/100"; --k1-u2-isim: "Elmalı Soda"; --k1-u2-fiyat: "30";
             --k1-u3-resim: "https://via.placeholder.com/100"; --k1-u3-isim: "Karpuz Çilek"; --k1-u3-fiyat: "30";
@@ -51,7 +49,7 @@
             --k1-u23-resim: "https://via.placeholder.com/100"; --k1-u23-isim: "Çilekli Limonata"; --k1-u23-fiyat: "100";
             --k1-u24-resim: "https://via.placeholder.com/100"; --k1-u24-isim: "Sade Soda"; --k1-u24-fiyat: "25";
 
-            /* KATEGORİ 2: SICAK İÇECEKLER */
+            /* KATEGORİ 2: SICAK İÇECEKLER (15 Ürün) */
             --k2-u1-resim: "https://via.placeholder.com/100"; --k2-u1-isim: "Çay"; --k2-u1-fiyat: "25";
             --k2-u2-resim: "https://via.placeholder.com/100"; --k2-u2-isim: "Fincan Çay"; --k2-u2-fiyat: "35";
             --k2-u3-resim: "https://via.placeholder.com/100"; --k2-u3-isim: "Türk Kahvesi"; --k2-u3-fiyat: "80";
@@ -97,7 +95,7 @@
             --k4-u3-resim: "https://via.placeholder.com/100"; --k4-u3-isim: "Vanilya Çikolatalı Spoonful Cup"; --k4-u3-fiyat: "190";
             
 
-            /* KATEGORİ 5: DONDURMA ÇEŞİTLERİ */
+            /* KATEGORİ 5: DONDURMA ÇEŞİTLERİ (7 Ürün) */
             --k5-u1-resim: "https://via.placeholder.com/100"; --k5-u1-isim: "Çikolata Parçacıklı"; --k5-u1-fiyat: "25";
             --k5-u2-resim: "https://via.placeholder.com/100"; --k5-u2-isim: "Sade Maraş"; --k5-u2-fiyat: "25";
             --k5-u3-resim: "https://via.placeholder.com/100"; --k5-u3-isim: "Çilek Maraş"; --k5-u3-fiyat: "25";
@@ -106,7 +104,7 @@
             --k5-u6-resim: "https://via.placeholder.com/100"; --k5-u6-isim: "Antep Fıstıklı Maraş"; --k5-u6-fiyat: "25";
             --k5-u7-resim: "https://via.placeholder.com/100"; --k5-u7-isim: "Yaban Mersinli Maraş"; --k5-u7-fiyat: "25";
 
-            /* KATEGORİ 6: ENERJİ İÇECEKLERİ */
+            /* KATEGORİ 6: ENERJİ İÇECEKLERİ (2 Ürün) */
             --k6-u1-resim: "https://via.placeholder.com/100"; --k6-u1-isim: "Enerji İçeceği (250 ml)"; --k6-u1-fiyat: "100";
             --k6-u2-resim: "https://via.placeholder.com/100"; --k6-u2-isim: "Enerji İçeceği (500 ml)"; --k6-u2-fiyat: "120";
         }
@@ -150,7 +148,6 @@
 <div class="container">
     <!-- ANA SAYFA KISMI -->
     <div id="home-page">
-        <!-- BANNER VE BAŞLIKLAR -->
         <div class="banner-container">
             <img id="banner-img" src="" alt="Banner">
             <div class="banner-text">
@@ -159,7 +156,6 @@
             </div>
         </div>
 
-        <!-- KATEGORİLER -->
         <div class="content">
             <h3 style="margin-top:0; color:#555;">Kategoriler</h3>
             <div id="category-list"></div>
@@ -192,7 +188,7 @@
         const catList = document.getElementById('category-list');
         catList.innerHTML = '';
 
-        for (let i = 1; i <= 6; i++) {
+        for (let i = 1; i <= 10; i++) {
             const isim = cssOku(`--kat-${i}-isim`);
             const resim = cssOku(`--kat-${i}-resim`);
 
@@ -209,7 +205,7 @@
         }
     }
 
-    // Kategoriye Tıklayınca Ürünleri Açma
+    // Kategoriye Tıklayınca Tüm Ürünleri Dinamik Olarak Açma
     function kategoriAc(katNo, katIsmi) {
         document.getElementById('home-page').classList.add('hidden');
         document.getElementById('detail-page').classList.remove('hidden');
@@ -218,10 +214,14 @@
         const prodList = document.getElementById('product-list');
         prodList.innerHTML = '';
 
-        for (let u = 1; u <= 10; u++) {
-            const resim = cssOku(`--k${katNo}-u${u}-resim`);
+        let u = 1;
+        while (true) {
             const isim = cssOku(`--k${katNo}-u${u}-isim`);
+            const resim = cssOku(`--k${katNo}-u${u}-resim`);
             const fiyat = cssOku(`--k${katNo}-u${u}-fiyat`);
+
+            // Eğer tanımlı ürün kalmadıysa döngüyü bitirir
+            if (!isim || isim === "") break;
 
             const item = document.createElement('div');
             item.className = 'menu-item';
@@ -233,6 +233,7 @@
                 </div>
             `;
             prodList.appendChild(item);
+            u++;
         }
         window.scrollTo(0, 0);
     }
@@ -249,5 +250,4 @@
 </script>
 
 </body>
-  </html>
-  
+</html>
