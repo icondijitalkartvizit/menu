@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA VIE - Patisserie & Cafe</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .banner-container { position: relative; width: 100%; height: 200px; overflow: hidden; background: #222; }
+        .banner-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .banner-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%; }
+        .banner-text h1 { margin: 0; font-size: 26px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 1px; }
+        .banner-text p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }
+        .content { padding: 20px; }
+        .category-card { display: flex; align-items: center; background: #fff; border: 1px solid #eee; border-radius: 10px; margin-bottom: 15px; padding: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .category-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .category-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .category-card .title { font-size: 18px; font-weight: 600; color: #2c3e50; }
+        .page-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .back-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 15px; }
+        .category-title-header { font-size: 20px; margin: 0; color: #c0392b; border-bottom: 2px solid #c0392b; padding-bottom: 5px; width: 100%; }
+        .menu-item { display: flex; background: white; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
+        .menu-item img { width: 75px; height: 75px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+        .item-details { display: flex; flex-direction: column; }
+        .item-title { font-size: 16px; font-weight: 600; color: #333; }
+        .item-price { font-size: 15px; color: #27ae60; font-weight: bold; margin-top: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="home-page">
+        <div class="banner-container">
+            <img id="banner-img" src="https://via.placeholder.com/800x400" alt="Banner">
+            <div class="banner-text">
+                <h1 id="pastane-adi">LA VIE</h1>
+                <p id="alt-baslik">PATISSERIE & CAFE - ILGIN</p>
+            </div>
+        </div>
+        <div class="content">
+            <h3 style="margin-top:0; color:#555;">Kategoriler</h3>
+            <div id="category-list"></div>
+        </div>
+    </div>
+
+    <div id="detail-page" class="content hidden">
+        <div class="page-header">
+            <button class="back-btn" onclick="anaSayfayaDon()">&larr; Geri</button>
+            <h2 id="secilen-kategori-baslik" class="category-title-header"></h2>
+        </div>
+        <div id="product-list"></div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://console.firebase.google.com/project/gggg-10250/database/gggg-10250-default-rtdb/data/~2F"></script>
+<script src="https://console.firebase.google.com/project/gggg-10250/database/gggg-10250-default-rtdb/data/~2F"></script>
+
+<script>
+    // VARSAYILAN TÜM LA VIE MENÜ VERİSİ
+    const varsayilanMenu = {
+        pastaneAdi: "LA VIE",
+        altBaslik: "PATISSERIE & CAFE - ILGIN",
+        bannerResmi: "https://via.placeholder.com/800x400",
+        kategoriler: [
+            {
+                isim: "Soğuk İçecekler", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Su", fiyat: "15", resim: "https://via.placeholder.com/100" },
+                    { isim: "Elmalı Soda", fiyat: "30", resim: "https://via.placeholder.com/100" },
+                    { isim: "Karpuz Çilek", fiyat: "30", resim: "https://via.placeholder.com/100" },
+                    { isim: "Mango Ananas", fiyat: "30", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fanta Portakal", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Sprite Kutu", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Coca-Cola Kutu (200 ml)", fiyat: "95", resim: "https://via.placeholder.com/100" },
+                    { isim: "Coca-Cola Kutu (330 ml)", fiyat: "85", resim: "https://via.placeholder.com/100" },
+                    { isim: "Coca-Cola Şişe", fiyat: "50", resim: "https://via.placeholder.com/100" },
+                    { isim: "Coca-Cola Zero", fiyat: "85", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fuse Tea Hibiskus", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fuse Tea Limon", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fuse Tea Mango", fiyat: "95", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fuse Tea Kavun Çilek", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fuse Tea Karpuz", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Portakal", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Portakal (Pet Şişe)", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Kayısı", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Şeftali", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Vişne", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cappy Atom", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Limonata", fiyat: "90", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çilekli Limonata", fiyat: "100", resim: "https://via.placeholder.com/100" },
+                    { isim: "Sade Soda", fiyat: "25", resim: "https://via.placeholder.com/100" }
+                ]
+            },
+            {
+                isim: "Sıcak İçecekler", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Çay", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fincan Çay", fiyat: "35", resim: "https://via.placeholder.com/100" },
+                    { isim: "Türk Kahvesi", fiyat: "80", resim: "https://via.placeholder.com/100" },
+                    { isim: "Damla Sakızlı Türk Kahvesi", fiyat: "85", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çilekli Türk Kahvesi", fiyat: "85", resim: "https://via.placeholder.com/100" },
+                    { isim: "Menengiç Türk Kahvesi", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Dibek Türk Kahvesi", fiyat: "70", resim: "https://via.placeholder.com/100" },
+                    { isim: "Osmanlı Türk Kahvesi", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Sıcak Çikolata", fiyat: "85", resim: "https://via.placeholder.com/100" },
+                    { isim: "Beyaz Sıcak Çikolata", fiyat: "90", resim: "https://via.placeholder.com/100" },
+                    { isim: "Salep", fiyat: "75", resim: "https://via.placeholder.com/100" },
+                    { isim: "Kış Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" },
+                    { isim: "Yeşil Çay", fiyat: "50", resim: "https://via.placeholder.com/100" },
+                    { isim: "Papatya Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" },
+                    { isim: "Hibiskus Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" }
+                ]
+            },
+            {
+                isim: "Tatlı Çeşitleri", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Cup Kaşık Tiramisu", fiyat: "170", resim: "https://via.placeholder.com/100" },
+                    { isim: "Cup Çilekli Çikolatalı", fiyat: "210", resim: "https://via.placeholder.com/100" },
+                    { isim: "Vanilya Çikolatalı Spoonful Cup", fiyat: "190", resim: "https://via.placeholder.com/100" }
+                ]
+            },
+            {
+                isim: "Tatlı & Pasta Çeşitleri", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Profiterol", fiyat: "90", resim: "https://via.placeholder.com/100" },
+                    { isim: "Kruvasan", fiyat: "150", resim: "https://via.placeholder.com/100" },
+                    { isim: "Orman Meyveli Pasta", fiyat: "180", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çilekli Kubbe Mono", fiyat: "190", resim: "https://via.placeholder.com/100" },
+                    { isim: "San Sebastian Cheesecake", fiyat: "220", resim: "https://via.placeholder.com/100" },
+                    { isim: "Frambuazlı Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
+                    { isim: "Limonlu Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
+                    { isim: "Lotuslu Cheesecake", fiyat: "190", resim: "https://via.placeholder.com/100" },
+                    { isim: "Mangolu Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
+                    { isim: "Yaban Mersinli Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
+                    { isim: "Tiramisu", fiyat: "150", resim: "https://via.placeholder.com/100" },
+                    { isim: "Belçika Çikolatalı Pasta", fiyat: "230", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çikolatalı Pasta", fiyat: "180", resim: "https://via.placeholder.com/100" },
+                    { isim: "Kırmızı Kalpli Pasta", fiyat: "200", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fıstık Rüyası", fiyat: "220", resim: "https://via.placeholder.com/100" },
+                    { isim: "Ballı Cevizli Marlenka", fiyat: "190", resim: "https://via.placeholder.com/100" },
+                    { isim: "Dondurma Çeşitleri (Top)", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Latte Mono", fiyat: "190", resim: "https://via.placeholder.com/100" },
+                    { isim: "Browni", fiyat: "220", resim: "https://via.placeholder.com/100" },
+                    { isim: "Vişne Burger", fiyat: "160", resim: "https://via.placeholder.com/100" },
+                    { isim: "Fıstıklı Cup", fiyat: "190", resim: "https://via.placeholder.com/100" }
+                ]
+            },
+            {
+                isim: "Dondurma Çeşitleri", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Çikolata Parçacıklı", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Sade Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çilek Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Limon Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Çikolatalı Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Antep Fıstıklı Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
+                    { isim: "Yaban Mersinli Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" }
+                ]
+            },
+            {
+                isim: "Enerji İçecekleri", resim: "https://via.placeholder.com/100",
+                urunler: [
+                    { isim: "Enerji İçeceği (250 ml)", fiyat: "100", resim: "https://via.placeholder.com/100" },
+                    { isim: "Enerji İçeceği (500 ml)", fiyat: "120", resim: "https://via.placeholder.com/100" }
+                ]
+            }
+        ]
+    };
+
+    // FIREBASE BİLGİLERİN
+    const firebaseConfig = {
+        apiKey: "SENIN_API_KEY",
+        authDomain: "SENIN_PROJECT.firebaseapp.com",
+        databaseURL: "https://SENIN_PROJECT-default-rtdb.firebaseio.com",
+        projectId: "SENIN_PROJECT",
+        storageBucket: "SENIN_PROJECT.appspot.com",
+        messagingSenderId: "123456",
+        appId: "1:123456:web:123"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let menuData = varsayilanMenu;
+
+    function arayuzGuncelle(data) {
+        document.getElementById('pastane-adi').innerText = data.pastaneAdi || "LA VIE";
+        document.getElementById('alt-baslik').innerText = data.altBaslik || "PATISSERIE & CAFE - ILGIN";
+        document.getElementById('banner-img').src = data.bannerResmi || "https://via.placeholder.com/800x400";
+
+        const catList = document.getElementById('category-list');
+        catList.innerHTML = '';
+
+        if (data.kategoriler) {
+            data.kategoriler.forEach((kat, index) => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => kategoriAc(index);
+                card.innerHTML = `
+                    <img src="${kat.resim || 'https://via.placeholder.com/100'}" alt="${kat.isim}">
+                    <div class="title">${kat.isim}</div>
+                `;
+                catList.appendChild(card);
+            });
+        }
+    }
+
+    // Ekranı ilk varsayılan verilerle çiz
+    arayuzGuncelle(varsayilanMenu);
+
+    // Veritabanından Canlı Veri Dinleme
+    db.ref('menu').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            menuData = data;
+            arayuzGuncelle(menuData);
+        }
+    });
+
+    function kategoriAc(katIndex) {
+        document.getElementById('home-page').classList.add('hidden');
+        document.getElementById('detail-page').classList.remove('hidden');
+        
+        const kat = menuData.kategoriler[katIndex];
+        document.getElementById('secilen-kategori-baslik').innerText = kat.isim;
+
+        const prodList = document.getElementById('product-list');
+        prodList.innerHTML = '';
+
+        if (kat.urunler) {
+            kat.urunler.forEach(u => {
+                const item = document.createElement('div');
+                item.className = 'menu-item';
+                item.innerHTML = `
+                    <img src="${u.resim || 'https://via.placeholder.com/100'}" alt="${u.isim}">
+                    <div class="item-details">
+                        <div class="item-title">${u.isim}</div>
+                        <div class="item-price">${u.fiyat} ₺</div>
+                    </div>
+                `;
+                prodList.appendChild(item);
+            });
+        }
+        window.scrollTo(0, 0);
+    }
+
+    function anaSayfayaDon() {
+        document.getElementById('detail-page').classList.add('hidden');
+        document.getElementById('home-page').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+  </html>
+  
