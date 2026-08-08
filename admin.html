@@ -187,11 +187,11 @@
             localData.altBaslik = document.getElementById('altBaslik').value;
             localData.bannerResmi = document.getElementById('bannerResmi').value;
 
-            alert("Veriler canlıya aktarılıyor kurbanım, bekle...");
+            alert("Veriler canlıya aktarılıyor Mehmet Bey, bekleyin...");
 
             db.ref('menu').set(localData)
                 .then(() => {
-                    alert("BAŞARILI! Tüm değişiklikler canlı menüye aktarıldı kurbanım!");
+                    alert("BAŞARILI! Tüm değişiklikler canlı menüye aktarıldı Mehmet Bey!");
                 })
                 .catch((error) => {
                     alert("FİREBASE HATASI: " + error.code + "\nMesaj: " + error.message);
