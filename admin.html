@@ -17,15 +17,17 @@
         input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         
         .kat-box { background: #fff; border: 2px solid #3498db; padding: 15px; border-radius: 8px; margin-bottom: 20px; position: relative; }
-        .kat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
+        .kat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
         
-        .urun-box { background: #fdfdfd; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .urun-box input { flex: 1; min-width: 120px; }
+        .urun-box { background: #fdfdfd; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .urun-box input { flex: 1; min-width: 100px; }
         
-        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: #fff; }
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: #fff; font-size: 13px; }
         .btn-add { background: #2980b9; margin-top: 10px; }
         .btn-add-urun { background: #8e44ad; }
-        .btn-danger { background: #e74c3c; padding: 6px 12px; font-size: 12px; }
+        .btn-danger { background: #e74c3c; }
+        .btn-move { background: #f39c12; }
+        .btn-move:disabled { background: #bdc3c7; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -35,12 +37,12 @@
         <button class="save-btn" onclick="verileriKaydet()">TÜM DEĞİŞİKLİKLERİ CANLIYA KAYDET</button>
     </div>
 
-    <h1> LA VIE - Menü Yönetim Paneli</h1>
-    <p>Mehmet Bey, buradan yaptığınız tüm değişiklikler "Canlıya Kaydet" butonuna bastığında QR Menünüze yansır.</p>
+    <h1>LA VIE - Menü Yönetim Paneli</h1>
+    <p>Kurbanım, kategorilerin ve ürünlerin sırasını "▲" ve "▼" butonlarıyla değiştirebilirsin.</p>
 
     <!-- GENEL BİLGİLER -->
     <div class="section">
-        <h2> Genellik & Banner Ayarları</h2>
+        <h2>Genel & Banner Ayarları</h2>
         <label>Pastane / Kafe Adı:</label>
         <input type="text" id="pastaneAdi" placeholder="Örn: LA VIE">
 
@@ -53,7 +55,7 @@
 
     <!-- KATEGORİLER VE ÜRÜNLER -->
     <div class="section">
-        <h2> Kategoriler ve Ürün Yönetimi</h2>
+        <h2>Kategoriler ve Ürün Yönetimi</h2>
         <div id="kategorilerListesi"></div>
         <button class="btn btn-add" onclick="kategoriEkle()">+ Yeni Kategori Ekle</button>
     </div>
@@ -102,7 +104,7 @@
                     document.getElementById('bannerResmi').value = localData.bannerResmi || '';
                     adminEkraniCiz();
                 } else {
-                    alert("Veritabanı boş, varsayılan şablon yüklenebilir.");
+                    alert("Veritabanı boş kurbanım!");
                 }
             })
             .catch((err) => {
@@ -115,12 +117,17 @@
         const container = document.getElementById('kategorilerListesi');
         container.innerHTML = '';
 
+        const katSayisi = localData.kategoriler.length;
+
         localData.kategoriler.forEach((kat, kIndex) => {
             let urunlerHTML = '';
             if (kat.urunler) {
+                const urunSayisi = kat.urunler.length;
                 kat.urunler.forEach((urun, uIndex) => {
                     urunlerHTML += `
                         <div class="urun-box">
+                            <button class="btn btn-move" ${uIndex === 0 ? 'disabled' : ''} onclick="urunTasi(${kIndex}, ${uIndex}, -1)">▲</button>
+                            <button class="btn btn-move" ${uIndex === urunSayisi - 1 ? 'disabled' : ''} onclick="urunTasi(${kIndex}, ${uIndex}, 1)">▼</button>
                             <input type="text" value="${urun.ad || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'ad', this.value)" placeholder="Ürün Adı">
                             <input type="text" value="${urun.fiyat || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'fiyat', this.value)" placeholder="Fiyat (TL)">
                             <input type="text" value="${urun.resim || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'resim', this.value)" placeholder="Resim URL">
@@ -133,7 +140,11 @@
             container.innerHTML += `
                 <div class="kat-box">
                     <div class="kat-header">
-                        <input type="text" style="font-weight:bold; font-size:16px;" value="${kat.ad || ''}" onchange="kategoriGuncelle(${kIndex}, 'ad', this.value)" placeholder="Kategori Adı">
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn btn-move" ${kIndex === 0 ? 'disabled' : ''} onclick="kategoriTasi(${kIndex}, -1)">▲ Yukarı</button>
+                            <button class="btn btn-move" ${kIndex === katSayisi - 1 ? 'disabled' : ''} onclick="kategoriTasi(${kIndex}, 1)">▼ Aşağı</button>
+                        </div>
+                        <input type="text" style="font-weight:bold; font-size:16px; flex:1; min-width:150px;" value="${kat.ad || ''}" onchange="kategoriGuncelle(${kIndex}, 'ad', this.value)" placeholder="Kategori Adı">
                         <button class="btn btn-danger" onclick="kategoriSil(${kIndex})">Kategoriyi Sil</button>
                     </div>
                     <label>Kategori Resim URL:</label>
@@ -145,6 +156,26 @@
                 </div>
             `;
         });
+    }
+
+    // Sıra Değiştirme Fonksiyonları
+    function kategoriTasi(kIndex, yon) {
+        const yeniIndex = kIndex + yon;
+        if (yeniIndex < 0 || yeniIndex >= localData.kategoriler.length) return;
+        const temp = localData.kategoriler[kIndex];
+        localData.kategoriler[kIndex] = localData.kategoriler[yeniIndex];
+        localData.kategoriler[yeniIndex] = temp;
+        adminEkraniCiz();
+    }
+
+    function urunTasi(kIndex, uIndex, yon) {
+        const urunler = localData.kategoriler[kIndex].urunler;
+        const yeniIndex = uIndex + yon;
+        if (yeniIndex < 0 || yeniIndex >= urunler.length) return;
+        const temp = urunler[uIndex];
+        urunler[uIndex] = urunler[yeniIndex];
+        urunler[yeniIndex] = temp;
+        adminEkraniCiz();
     }
 
     // Güncelleme Fonksiyonları
@@ -187,11 +218,11 @@
             localData.altBaslik = document.getElementById('altBaslik').value;
             localData.bannerResmi = document.getElementById('bannerResmi').value;
 
-            alert("Veriler canlıya aktarılıyor Mehmet Bey, bekleyin...");
+            alert("Veriler canlıya aktarılıyor kurbanım, bekle...");
 
             db.ref('menu').set(localData)
                 .then(() => {
-                    alert("BAŞARILI! Tüm değişiklikler canlı menüye aktarıldı Mehmet Bey!");
+                    alert("BAŞARILI! Tüm sıralama ve değişiklikler canlı menüye aktarıldı kurbanım!");
                 })
                 .catch((error) => {
                     alert("FİREBASE HATASI: " + error.code + "\nMesaj: " + error.message);
