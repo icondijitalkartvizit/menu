@@ -3,301 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LA VIE - Menü Yönetim Paneli</title>
-
-    <!-- Firebase SDK (Kütüphaneler) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-    <!-- ======================================================= -->
-    <!-- FIREBASE BİLGİLERİNİ TAM BURAYA, EN ÜSTE YAPIŞTIR! -->
-    <!-- ======================================================= -->
-    <script>
-        const firebaseConfig = {
-};
-            apiKey: "AIzaSyBWGuRJYkWIobERWm6494Fb3qbGUlxoROo",
-            authDomain: "gggg-10250.firebaseapp.com",
-            databaseURL: "https://gggg-10250-default-rtdb.firebaseio.com",
-            projectId: "gggg-10250",
-            storageBucket: "gggg-10250.firebasestorage.app",
-            messagingSenderId: "371631174255",
-            appId: "G-BZ5RXR3KZW"
-        };
-        // Firebase Başlatılıyor
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-    </script>
-    <!-- ======================================================= -->
-
+    <title>LA VIE - Admin Yönetim Paneli</title>
     <style>
-        body { font-family: sans-serif; background: #eef2f5; padding: 20px; }
-        .panel { max-width: 850px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1, h2, h3, h4 { color: #2c3e50; }
-        input { width: 100%; padding: 8px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button:hover { opacity: 0.9; }
-        .btn-danger { background: #e74c3c; }
-        .btn-move { background: #3498db; padding: 5px 10px; margin-right: 2px; }
-        .card { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
-        .product-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; background: white; padding: 8px; border-radius: 5px; border: 1px solid #eee; }
-        .product-row input { margin: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f5; margin: 0; padding: 20px; color: #333; }
+        .admin-container { max-width: 800px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #2c3e50; }
+        .sticky-save { position: sticky; top: 10px; z-index: 1000; background: #27ae60; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .save-btn { background: #fff; color: #27ae60; border: none; padding: 12px 25px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .save-btn:hover { background: #f1f1f1; transform: scale(1.02); }
+        
+        .section { background: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; margin-bottom: 5px; color: #555; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        
+        .kat-box { background: #fff; border: 2px solid #3498db; padding: 15px; border-radius: 8px; margin-bottom: 20px; position: relative; }
+        .kat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
+        
+        .urun-box { background: #fdfdfd; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .urun-box input { flex: 1; min-width: 120px; }
+        
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: #fff; }
+        .btn-add { background: #2980b9; margin-top: 10px; }
+        .btn-add-urun { background: #8e44ad; }
+        .btn-danger { background: #e74c3c; padding: 6px 12px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div class="panel">
-    <h1>LA VIE Menü Yönetim Paneli</h1>
-    
-    <h2>1. Genel Bilgiler</h2>
-    <label>Pastane Adı:</label>
-    <input type="text" id="pastaneAdi">
-    <label>Alt Başlık:</label>
-    <input type="text" id="altBaslik">
-    <label>Banner Resim Linki:</label>
-    <input type="text" id="bannerResmi">
+<div class="admin-container">
+    <div class="sticky-save">
+        <button class="save-btn" onclick="verileriKaydet()">TÜM DEĞİŞİKLİKLERİ CANLIYA KAYDET</button>
+    </div>
 
-    <hr>
+    <h1> LA VIE - Menü Yönetim Paneli</h1>
+    <p>Kurbanım, buradan yaptığın tüm değişiklikler "Canlıya Kaydet" butonuna bastığında QR Menüye yansır.</p>
 
-    <h2>2. Kategoriler ve Ürünler</h2>
-    <div id="categories-container"></div>
-    <button onclick="kategoriEkle()">+ Yeni Kategori Ekle</button>
+    <!-- GENEL BİLGİLER -->
+    <div class="section">
+        <h2> Genellik & Banner Ayarları</h2>
+        <label>Pastane / Kafe Adı:</label>
+        <input type="text" id="pastaneAdi" placeholder="Örn: LA VIE">
 
-    <br><br><hr><br>
-    <button style="width:100%; font-size:18px; padding:15px; background:#8e44ad;" onclick="verileriKaydet()">TÜM DEĞİŞİKLİKLERİ CANLIYA KAYDET</button>
+        <label>Alt Başlık:</label>
+        <input type="text" id="altBaslik" placeholder="Örn: PATISSERIE & CAFE - ILGIN">
+
+        <label>Banner Resim URL:</label>
+        <input type="text" id="bannerResmi" placeholder="https://...">
+    </div>
+
+    <!-- KATEGORİLER VE ÜRÜNLER -->
+    <div class="section">
+        <h2> Kategoriler ve Ürün Yönetimi</h2>
+        <div id="kategorilerListesi"></div>
+        <button class="btn btn-add" onclick="kategoriEkle()">+ Yeni Kategori Ekle</button>
+    </div>
 </div>
 
+<!-- FIREBASE KÜTÜPHANELERİ -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script>
-    const varsayilanMenu = {
-        pastaneAdi: "LA VIE",
-        altBaslik: "PATISSERIE & CAFE - ILGIN",
-        bannerResmi: "https://via.placeholder.com/800x400",
-        kategoriler: [
-            {
-                isim: "Soğuk İçecekler", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Su", fiyat: "15", resim: "https://via.placeholder.com/100" },
-                    { isim: "Elmalı Soda", fiyat: "30", resim: "https://via.placeholder.com/100" },
-                    { isim: "Karpuz Çilek", fiyat: "30", resim: "https://via.placeholder.com/100" },
-                    { isim: "Mango Ananas", fiyat: "30", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fanta Portakal", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Sprite Kutu", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Coca-Cola Kutu (200 ml)", fiyat: "95", resim: "https://via.placeholder.com/100" },
-                    { isim: "Coca-Cola Kutu (330 ml)", fiyat: "85", resim: "https://via.placeholder.com/100" },
-                    { isim: "Coca-Cola Şişe", fiyat: "50", resim: "https://via.placeholder.com/100" },
-                    { isim: "Coca-Cola Zero", fiyat: "85", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fuse Tea Hibiskus", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fuse Tea Limon", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fuse Tea Mango", fiyat: "95", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fuse Tea Kavun Çilek", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fuse Tea Karpuz", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Portakal", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Portakal (Pet Şişe)", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Kayısı", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Şeftali", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Vişne", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cappy Atom", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Limonata", fiyat: "90", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çilekli Limonata", fiyat: "100", resim: "https://via.placeholder.com/100" },
-                    { isim: "Sade Soda", fiyat: "25", resim: "https://via.placeholder.com/100" }
-                ]
-            },
-            {
-                isim: "Sıcak İçecekler", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Çay", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fincan Çay", fiyat: "35", resim: "https://via.placeholder.com/100" },
-                    { isim: "Türk Kahvesi", fiyat: "80", resim: "https://via.placeholder.com/100" },
-                    { isim: "Damla Sakızlı Türk Kahvesi", fiyat: "85", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çilekli Türk Kahvesi", fiyat: "85", resim: "https://via.placeholder.com/100" },
-                    { isim: "Menengiç Türk Kahvesi", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Dibek Türk Kahvesi", fiyat: "70", resim: "https://via.placeholder.com/100" },
-                    { isim: "Osmanlı Türk Kahvesi", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Sıcak Çikolata", fiyat: "85", resim: "https://via.placeholder.com/100" },
-                    { isim: "Beyaz Sıcak Çikolata", fiyat: "90", resim: "https://via.placeholder.com/100" },
-                    { isim: "Salep", fiyat: "75", resim: "https://via.placeholder.com/100" },
-                    { isim: "Kış Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" },
-                    { isim: "Yeşil Çay", fiyat: "50", resim: "https://via.placeholder.com/100" },
-                    { isim: "Papatya Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" },
-                    { isim: "Hibiskus Çayı", fiyat: "50", resim: "https://via.placeholder.com/100" }
-                ]
-            },
-            {
-                isim: "Tatlı Çeşitleri", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Cup Kaşık Tiramisu", fiyat: "170", resim: "https://via.placeholder.com/100" },
-                    { isim: "Cup Çilekli Çikolatalı", fiyat: "210", resim: "https://via.placeholder.com/100" },
-                    { isim: "Vanilya Çikolatalı Spoonful Cup", fiyat: "190", resim: "https://via.placeholder.com/100" }
-                ]
-            },
-            {
-                isim: "Tatlı & Pasta Çeşitleri", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Profiterol", fiyat: "90", resim: "https://via.placeholder.com/100" },
-                    { isim: "Kruvasan", fiyat: "150", resim: "https://via.placeholder.com/100" },
-                    { isim: "Orman Meyveli Pasta", fiyat: "180", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çilekli Kubbe Mono", fiyat: "190", resim: "https://via.placeholder.com/100" },
-                    { isim: "San Sebastian Cheesecake", fiyat: "220", resim: "https://via.placeholder.com/100" },
-                    { isim: "Frambuazlı Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
-                    { isim: "Limonlu Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
-                    { isim: "Lotuslu Cheesecake", fiyat: "190", resim: "https://via.placeholder.com/100" },
-                    { isim: "Mangolu Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
-                    { isim: "Yaban Mersinli Cheesecake", fiyat: "170", resim: "https://via.placeholder.com/100" },
-                    { isim: "Tiramisu", fiyat: "150", resim: "https://via.placeholder.com/100" },
-                    { isim: "Belçika Çikolatalı Pasta", fiyat: "230", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çikolatalı Pasta", fiyat: "180", resim: "https://via.placeholder.com/100" },
-                    { isim: "Kırmızı Kalpli Pasta", fiyat: "200", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fıstık Rüyası", fiyat: "220", resim: "https://via.placeholder.com/100" },
-                    { isim: "Ballı Cevizli Marlenka", fiyat: "190", resim: "https://via.placeholder.com/100" },
-                    { isim: "Dondurma Çeşitleri (Top)", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Latte Mono", fiyat: "190", resim: "https://via.placeholder.com/100" },
-                    { isim: "Browni", fiyat: "220", resim: "https://via.placeholder.com/100" },
-                    { isim: "Vişne Burger", fiyat: "160", resim: "https://via.placeholder.com/100" },
-                    { isim: "Fıstıklı Cup", fiyat: "190", resim: "https://via.placeholder.com/100" }
-                ]
-            },
-            {
-                isim: "Dondurma Çeşitleri", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Çikolata Parçacıklı", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Sade Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çilek Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Limon Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Çikolatalı Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Antep Fıstıklı Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" },
-                    { isim: "Yaban Mersinli Maraş", fiyat: "25", resim: "https://via.placeholder.com/100" }
-                ]
-            },
-            {
-                isim: "Enerji İçecekleri", resim: "https://via.placeholder.com/100",
-                urunler: [
-                    { isim: "Enerji İçeceği (250 ml)", fiyat: "100", resim: "https://via.placeholder.com/100" },
-                    { isim: "Enerji İçeceği (500 ml)", fiyat: "120", resim: "https://via.placeholder.com/100" }
-                ]
-            }
-        ]
+    // =========================================================
+    // SADECE BURADAKİ TIRNAKLARIN İÇİNİ KENDİ FİREBASE BİLGİLERİNLE DOLDUR:
+    // =========================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyBWGuRJYkWIobERWm6494Fb3qbGUlxoROo",
+        authDomain: "gggg-10250.firebaseapp.com",
+        databaseURL: "https://gggg-10250-default-rtdb.firebaseio.com",
+        projectId: "gggg-10250",
+        storageBucket: "gggg-10250.appspot.com",
+        messagingSenderId: "371631174255",
+        appId: "1:371631174255:web:ecfb4449046a8417eb939a"
     };
 
-    let localData = varsayilanMenu;
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
 
-    db.ref('menu').once('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) localData = data;
-        
-        document.getElementById('pastaneAdi').value = localData.pastaneAdi || '';
-        document.getElementById('altBaslik').value = localData.altBaslik || '';
-        document.getElementById('bannerResmi').value = localData.bannerResmi || '';
+    let localData = {
+        pastaneAdi: "",
+        altBaslik: "",
+        bannerResmi: "",
+        kategoriler: []
+    };
 
-        arayuzCiz();
-    });
+    // Firebase'den Verileri Çekip Admin Paneline Doldurma
+    function verileriYukle() {
+        db.ref('menu').once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    localData = data;
+                    if(!localData.kategoriler) localData.kategoriler = [];
+                    document.getElementById('pastaneAdi').value = localData.pastaneAdi || '';
+                    document.getElementById('altBaslik').value = localData.altBaslik || '';
+                    document.getElementById('bannerResmi').value = localData.bannerResmi || '';
+                    adminEkraniCiz();
+                } else {
+                    alert("Veritabanı boş, varsayılan şablon yüklenebilir.");
+                }
+            })
+            .catch((err) => {
+                alert("YÜKLEME HATASI: " + err.message);
+            });
+    }
 
-    function arayuzCiz() {
-        const container = document.getElementById('categories-container');
+    // Admin Panelini Dinamik Oluşturan Fonksiyon
+    function adminEkraniCiz() {
+        const container = document.getElementById('kategorilerListesi');
         container.innerHTML = '';
 
-        if (!localData.kategoriler) localData.kategoriler = [];
-
-        localData.kategoriler.forEach((kat, kIdx) => {
-            if (!kat.urunler) kat.urunler = [];
-
-            let urunlerHtml = '';
-            kat.urunler.forEach((u, uIdx) => {
-                urunlerHtml += `
-                    <div class="product-row">
-                        <button class="btn-move" onclick="urunKaydir(${kIdx}, ${uIdx}, -1)">▲</button>
-                        <button class="btn-move" onclick="urunKaydir(${kIdx}, ${uIdx}, 1)">▼</button>
-                        <input type="text" placeholder="Ürün Adı" value="${u.isim}" onchange="localData.kategoriler[${kIdx}].urunler[${uIdx}].isim = this.value">
-                        <input type="text" placeholder="Fiyat" value="${u.fiyat}" style="width:70px;" onchange="localData.kategoriler[${kIdx}].urunler[${uIdx}].fiyat = this.value">
-                        <input type="text" placeholder="Resim Linki" value="${u.resim || ''}" onchange="localData.kategoriler[${kIdx}].urunler[${uIdx}].resim = this.value">
-                        <button class="btn-danger" onclick="urunSil(${kIdx}, ${uIdx})">X</button>
-                    </div>
-                `;
-            });
-
-            const katHtml = `
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3>Kategori #${kIdx + 1}: ${kat.isim}</h3>
-                        <div>
-                            <button class="btn-move" onclick="kategoriKaydir(${kIdx}, -1)">Yukarı ▲</button>
-                            <button class="btn-move" onclick="kategoriKaydir(${kIdx}, 1)">Aşağı ▼</button>
-                            <button class="btn-danger" onclick="kategoriSil(${kIdx})">Kategoriyi Sil</button>
+        localData.kategoriler.forEach((kat, kIndex) => {
+            let urunlerHTML = '';
+            if (kat.urunler) {
+                kat.urunler.forEach((urun, uIndex) => {
+                    urunlerHTML += `
+                        <div class="urun-box">
+                            <input type="text" value="${urun.ad || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'ad', this.value)" placeholder="Ürün Adı">
+                            <input type="text" value="${urun.fiyat || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'fiyat', this.value)" placeholder="Fiyat (TL)">
+                            <input type="text" value="${urun.resim || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'resim', this.value)" placeholder="Resim URL">
+                            <button class="btn btn-danger" onclick="urunSil(${kIndex}, ${uIndex})">Sil</button>
                         </div>
-                    </div>
-                    <label>Kategori Adı:</label>
-                    <input type="text" value="${kat.isim}" onchange="localData.kategoriler[${kIdx}].isim = this.value">
-                    <label>Kategori Resim Linki:</label>
-                    <input type="text" value="${kat.resim || ''}" onchange="localData.kategoriler[${kIdx}].resim = this.value">
+                    `;
+                });
+            }
 
-                    <h4>Ürünler (${kat.urunler.length} Tane)</h4>
-                    ${urunlerHtml}
-                    <button style="margin-top:10px; background:#e67e22;" onclick="urunEkle(${kIdx})">+ Bu Kategoriye Ürün Ekle</button>
+            container.innerHTML += `
+                <div class="kat-box">
+                    <div class="kat-header">
+                        <input type="text" style="font-weight:bold; font-size:16px;" value="${kat.ad || ''}" onchange="kategoriGuncelle(${kIndex}, 'ad', this.value)" placeholder="Kategori Adı">
+                        <button class="btn btn-danger" onclick="kategoriSil(${kIndex})">Kategoriyi Sil</button>
+                    </div>
+                    <label>Kategori Resim URL:</label>
+                    <input type="text" value="${kat.resim || ''}" onchange="kategoriGuncelle(${kIndex}, 'resim', this.value)" placeholder="https://..." style="margin-bottom:15px;">
+                    
+                    <h4>Ürünler</h4>
+                    ${urunlerHTML}
+                    <button class="btn btn-add-urun" onclick="urunEkle(${kIndex})">+ Bu Kategoriye Ürün Ekle</button>
                 </div>
             `;
-            container.innerHTML += katHtml;
         });
     }
 
-    function kategoriEkle() {
-        localData.kategoriler.push({ isim: "Yeni Kategori", resim: "", urunler: [] });
-        arayuzCiz();
+    // Güncelleme Fonksiyonları
+    function kategoriGuncelle(kIndex, alan, deger) {
+        localData.kategoriler[kIndex][alan] = deger;
     }
-    function kategoriSil(kIdx) {
-        if(confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğine emin misin?")) {
-            localData.kategoriler.splice(kIdx, 1);
-            arayuzCiz();
+
+    function urunGuncelle(kIndex, uIndex, alan, deger) {
+        localData.kategoriler[kIndex].urunler[uIndex][alan] = deger;
+    }
+
+    function kategoriEkle() {
+        if(!localData.kategoriler) localData.kategoriler = [];
+        localData.kategoriler.push({ ad: "Yeni Kategori", resim: "", urunler: [] });
+        adminEkraniCiz();
+    }
+
+    function kategoriSil(kIndex) {
+        if(confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğine emin misin kurbanım?")) {
+            localData.kategoriler.splice(kIndex, 1);
+            adminEkraniCiz();
         }
     }
-    function kategoriKaydir(kIdx, yon) {
-        const yeniIdx = kIdx + yon;
-        if (yeniIdx < 0 || yeniIdx >= localData.kategoriler.length) return;
-        const temp = localData.kategoriler[kIdx];
-        localData.kategoriler[kIdx] = localData.kategoriler[yeniIdx];
-        localData.kategoriler[yeniIdx] = temp;
-        arayuzCiz();
+
+    function urunEkle(kIndex) {
+        if(!localData.kategoriler[kIndex].urunler) localData.kategoriler[kIndex].urunler = [];
+        localData.kategoriler[kIndex].urunler.push({ ad: "Yeni Ürün", fiyat: "0", resim: "" });
+        adminEkraniCiz();
     }
 
-    function urunEkle(kIdx) {
-        localData.kategoriler[kIdx].urunler.push({ isim: "Yeni Ürün", fiyat: "0", resim: "" });
-        arayuzCiz();
-    }
-    function urunSil(kIdx, uIdx) {
-        localData.kategoriler[kIdx].urunler.splice(uIdx, 1);
-        arayuzCiz();
-    }
-    function urunKaydir(kIdx, uIdx, yon) {
-        const urunler = localData.kategoriler[kIdx].urunler;
-        const yeniIdx = uIdx + yon;
-        if (yeniIdx < 0 || yeniIdx >= urunler.length) return;
-        const temp = urunler[uIdx];
-        urunler[uIdx] = urunler[yeniIdx];
-        urunler[yeniIdx] = temp;
-        arayuzCiz();
+    function urunSil(kIndex, uIndex) {
+        localData.kategoriler[kIndex].urunler.splice(uIndex, 1);
+        adminEkraniCiz();
     }
 
-        function verileriKaydet() {
+    // Firebase'e Kaydetme
+    function verileriKaydet() {
         try {
             localData.pastaneAdi = document.getElementById('pastaneAdi').value;
             localData.altBaslik = document.getElementById('altBaslik').value;
             localData.bannerResmi = document.getElementById('bannerResmi').value;
 
-            // Ekran uyarısı verelim ki basılıp basılmadığı anlaşılsın
-            alert("Kayıt isteği Firebase'e gönderiliyor, bekle kurbanım...");
+            alert("Veriler canlıya aktarılıyor kurbanım, bekle...");
 
             db.ref('menu').set(localData)
                 .then(() => {
-                    alert("BAŞARILI! Tüm değişiklikler canlıya aktarıldı kurbanım!");
+                    alert("BAŞARILI! Tüm değişiklikler canlı menüye aktarıldı kurbanım!");
                 })
                 .catch((error) => {
-                    // Firebase hatası olursa ekrana kırmızı alarm gibi yazdıracak
-                    alert("FİREBASE HATASI: " + error.code + " - " + error.message);
+                    alert("FİREBASE HATASI: " + error.code + "\nMesaj: " + error.message);
                 });
         } catch (err) {
-            // Kodun kendisinde bir hata varsa burası çalışacak
             alert("KOD HATASI: " + err.message);
         }
     }
 
-    }
+    // Sayfa Açıldığında Verileri Getir
+    window.onload = function() {
+        verileriYukle();
+    };
 </script>
 
 </body>
