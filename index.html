@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LA VIE - Patisserie & Cafe</title>
+
+    <!-- Firebase SDK (Kütüphaneler) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <!-- ======================================================= -->
+    <!-- FIREBASE BİLGİLERİNİ TAM BURAYA, EN ÜSTE YAPIŞTIR! -->
+    <!-- ======================================================= -->
+    <script>
+        const firebaseConfig = {
+};
+            apiKey: "AIzaSyBWGuRJYkWIobERWm6494Fb3qbGUlxoROo",
+            authDomain: "gggg-10250.firebaseapp.com",
+            databaseURL: "https://gggg-10250-default-rtdb.firebaseio.com",
+            projectId: "gggg-10250",
+            storageBucket: "gggg-10250.firebasestorage.app",
+            messagingSenderId: "371631174255",
+            appId: "G-BZ5RXR3KZW"
+        };
+        // Firebase Başlatılıyor
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+    </script>
+    <!-- ======================================================= -->
+
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; color: #333; }
         .container { max-width: 600px; margin: 0 auto; background: #fff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
@@ -54,12 +79,7 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://console.firebase.google.com/project/gggg-10250/database/gggg-10250-default-rtdb/data/~2F"></script>
-<script src="https://console.firebase.google.com/project/gggg-10250/database/gggg-10250-default-rtdb/data/~2F"></script>
-
 <script>
-    // VARSAYILAN TÜM LA VIE MENÜ VERİSİ
     const varsayilanMenu = {
         pastaneAdi: "LA VIE",
         altBaslik: "PATISSERIE & CAFE - ILGIN",
@@ -170,19 +190,6 @@
         ]
     };
 
-    // FIREBASE BİLGİLERİN
-    const firebaseConfig = {
-        apiKey: "SENIN_API_KEY",
-        authDomain: "SENIN_PROJECT.firebaseapp.com",
-        databaseURL: "https://SENIN_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "SENIN_PROJECT",
-        storageBucket: "SENIN_PROJECT.appspot.com",
-        messagingSenderId: "123456",
-        appId: "1:123456:web:123"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
     let menuData = varsayilanMenu;
 
     function arayuzGuncelle(data) {
@@ -207,10 +214,8 @@
         }
     }
 
-    // Ekranı ilk varsayılan verilerle çiz
     arayuzGuncelle(varsayilanMenu);
 
-    // Veritabanından Canlı Veri Dinleme
     db.ref('menu').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -254,5 +259,4 @@
 </script>
 
 </body>
-  </html>
-  
+</html>
