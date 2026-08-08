@@ -274,18 +274,29 @@
         arayuzCiz();
     }
 
-    function verileriKaydet() {
-        localData.pastaneAdi = document.getElementById('pastaneAdi').value;
-        localData.altBaslik = document.getElementById('altBaslik').value;
-        localData.bannerResmi = document.getElementById('bannerResmi').value;
+        function verileriKaydet() {
+        try {
+            localData.pastaneAdi = document.getElementById('pastaneAdi').value;
+            localData.altBaslik = document.getElementById('altBaslik').value;
+            localData.bannerResmi = document.getElementById('bannerResmi').value;
 
-        db.ref('menu').set(localData, (error) => {
-            if (error) {
-                alert("Hata oluştu: " + error.message);
-            } else {
-                alert("Tüm değişiklikler başarıyla CANLIYA AKTARILDI!");
-            }
-        });
+            // Ekran uyarısı verelim ki basılıp basılmadığı anlaşılsın
+            alert("Kayıt isteği Firebase'e gönderiliyor, bekle kurbanım...");
+
+            db.ref('menu').set(localData)
+                .then(() => {
+                    alert("BAŞARILI! Tüm değişiklikler canlıya aktarıldı kurbanım!");
+                })
+                .catch((error) => {
+                    // Firebase hatası olursa ekrana kırmızı alarm gibi yazdıracak
+                    alert("FİREBASE HATASI: " + error.code + " - " + error.message);
+                });
+        } catch (err) {
+            // Kodun kendisinde bir hata varsa burası çalışacak
+            alert("KOD HATASI: " + err.message);
+        }
+    }
+
     }
 </script>
 
