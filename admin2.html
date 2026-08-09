@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA VIE - Admin Yönetim Paneli</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f5; margin: 0; padding: 20px; color: #333; }
+        .admin-container { max-width: 850px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #2c3e50; }
+        .sticky-save { position: sticky; top: 10px; z-index: 1000; background: #27ae60; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .save-btn { background: #fff; color: #27ae60; border: none; padding: 12px 25px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .save-btn:hover { background: #f1f1f1; transform: scale(1.02); }
+        
+        .section { background: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; margin-bottom: 5px; color: #555; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        
+        .kat-box { background: #fff; border: 2px solid #3498db; padding: 15px; border-radius: 8px; margin-bottom: 20px; position: relative; }
+        .kat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+        
+        .urun-box { background: #fdfdfd; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .urun-box input[type="text"] { flex: 1; min-width: 120px; }
+        
+        .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 5px; border: 1px solid #ccc; background: #eee; }
+        .file-upload-wrapper { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 5px; }
+
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: #fff; font-size: 13px; }
+        .btn-add { background: #2980b9; margin-top: 10px; }
+        .btn-add-urun { background: #8e44ad; }
+        .btn-danger { background: #e74c3c; }
+        .btn-move { background: #f39c12; }
+        .btn-move:disabled { background: #bdc3c7; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="sticky-save">
+        <button class="save-btn" onclick="verileriKaydet()">TÜM DEĞİŞİKLİKLERİ CANLIYA KAYDET</button>
+    </div>
+
+    <h1>LA VIE - Menü Yönetim Paneli</h1>
+    <p>Kurbanım, kategorilerin ve ürünlerin sırasını "▲" ve "▼" butonlarıyla değiştirebilir, cihazından resim yükleyebilirsin.</p>
+
+    <!-- GENEL BİLGİLER -->
+    <div class="section">
+        <h2>Genel & Banner Ayarları</h2>
+        <label>Pastane / Kafe Adı:</label>
+        <input type="text" id="pastaneAdi" placeholder="Örn: LA VIE">
+
+        <label>Alt Başlık:</label>
+        <input type="text" id="altBaslik" placeholder="Örn: PATISSERIE & CAFE - ILGIN">
+
+        <label>Banner Resmi:</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <img id="bannerOnizleme" src="" class="img-preview" alt="Önizleme">
+            <input type="file" accept="image/*" onchange="resimYukleCihazdan(this, 'bannerResmi', 'bannerOnizleme')">
+        </div>
+        <input type="text" id="bannerResmi" placeholder="Veya Resim URL Yapıştırın" style="margin-top: 5px;" onchange="document.getElementById('bannerOnizleme').src = this.value">
+    </div>
+
+    <!-- KATEGORİLER VE ÜRÜNLER -->
+    <div class="section">
+        <h2>Kategoriler ve Ürün Yönetimi</h2>
+        <div id="kategorilerListesi"></div>
+        <button class="btn btn-add" onclick="kategoriEkle()">+ Yeni Kategori Ekle</button>
+    </div>
+</div>
+
+<!-- FIREBASE KÜTÜPHANELERİ -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBWGuRJYkWIobERWm6494Fb3qbGUlxoROo",
+        authDomain: "gggg-10250.firebaseapp.com",
+        databaseURL: "https://gggg-10250-default-rtdb.firebaseio.com",
+        projectId: "gggg-10250",
+        storageBucket: "gggg-10250.appspot.com",
+        messagingSenderId: "371631174255",
+        appId: "1:371631174255:web:ecfb4449046a8417eb939a"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    let localData = {
+        pastaneAdi: "",
+        altBaslik: "",
+        bannerResmi: "",
+        kategoriler: []
+    };
+
+    // Cihazdan Resim Yükleme ve Base64'e Çevirme Fonksiyonu
+    function resimYukleCihazdan(input, hedefField, onizlemeId, kIndex = null, uIndex = null) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Resim = e.target.result;
+                
+                if (onizlemeId) {
+                    document.getElementById(onizlemeId).src = base64Resim;
+                }
+                
+                if (kIndex !== null && uIndex !== null) {
+                    localData.kategoriler[kIndex].urunler[uIndex].resim = base64Resim;
+                } else if (kIndex !== null) {
+                    localData.kategoriler[kIndex].resim = base64Resim;
+                } else if (hedefField === 'bannerResmi') {
+                    document.getElementById('bannerResmi').value = base64Resim;
+                    localData.bannerResmi = base64Resim;
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Firebase'den Verileri Çekip Admin Paneline Doldurma
+    function verileriYukle() {
+        db.ref('menu').once('value')
+            .then((snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    localData = data;
+                    if(!localData.kategoriler) localData.kategoriler = [];
+                    document.getElementById('pastaneAdi').value = localData.pastaneAdi || '';
+                    document.getElementById('altBaslik').value = localData.altBaslik || '';
+                    document.getElementById('bannerResmi').value = localData.bannerResmi || '';
+                    document.getElementById('bannerOnizleme').src = localData.bannerResmi || '';
+                    adminEkraniCiz();
+                } else {
+                    alert("Veritabanı boş kurbanım!");
+                }
+            })
+            .catch((err) => {
+                alert("YÜKLEME HATASI: " + err.message);
+            });
+    }
+
+    // Admin Panelini Dinamik Oluşturan Fonksiyon
+    function adminEkraniCiz() {
+        const container = document.getElementById('kategorilerListesi');
+        container.innerHTML = '';
+
+        const katSayisi = localData.kategoriler.length;
+
+        localData.kategoriler.forEach((kat, kIndex) => {
+            let urunlerHTML = '';
+            if (kat.urunler) {
+                const urunSayisi = kat.urunler.length;
+                kat.urunler.forEach((urun, uIndex) => {
+                    urunlerHTML += `
+                        <div class="urun-box">
+                            <button class="btn btn-move" ${uIndex === 0 ? 'disabled' : ''} onclick="urunTasi(${kIndex}, ${uIndex}, -1)">▲</button>
+                            <button class="btn btn-move" ${uIndex === urunSayisi - 1 ? 'disabled' : ''} onclick="urunTasi(${kIndex}, ${uIndex}, 1)">▼</button>
+                            <img src="${urun.resim || ''}" class="img-preview" id="u_img_${kIndex}_${uIndex}">
+                            <input type="text" value="${urun.ad || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'ad', this.value)" placeholder="Ürün Adı">
+                            <input type="text" value="${urun.fiyat || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'fiyat', this.value)" placeholder="Fiyat (TL)">
+                            <div class="file-upload-wrapper">
+                                <input type="file" accept="image/*" style="width:180px;" onchange="resimYukleCihazdan(this, null, 'u_img_${kIndex}_${uIndex}', ${kIndex}, ${uIndex})">
+                                <input type="text" value="${urun.resim || ''}" onchange="urunGuncelle(${kIndex}, ${uIndex}, 'resim', this.value); document.getElementById('u_img_${kIndex}_${uIndex}').src=this.value;" placeholder="Veya URL Girin">
+                            </div>
+                            <button class="btn btn-danger" onclick="urunSil(${kIndex}, ${uIndex})">Sil</button>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML += `
+                <div class="kat-box">
+                    <div class="kat-header">
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn btn-move" ${kIndex === 0 ? 'disabled' : ''} onclick="kategoriTasi(${kIndex}, -1)">▲ Yukarı</button>
+                            <button class="btn btn-move" ${kIndex === katSayisi - 1 ? 'disabled' : ''} onclick="kategoriTasi(${kIndex}, 1)">▼ Aşağı</button>
+                        </div>
+                        <input type="text" style="font-weight:bold; font-size:16px; flex:1; min-width:150px;" value="${kat.ad || ''}" onchange="kategoriGuncelle(${kIndex}, 'ad', this.value)" placeholder="Kategori Adı">
+                        <button class="btn btn-danger" onclick="kategoriSil(${kIndex})">Kategoriyi Sil</button>
+                    </div>
+                    <label>Kategori Resmi:</label>
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
+                        <img src="${kat.resim || ''}" class="img-preview" id="k_img_${kIndex}">
+                        <input type="file" accept="image/*" onchange="resimYukleCihazdan(this, null, 'k_img_${kIndex}', ${kIndex})">
+                        <input type="text" value="${kat.resim || ''}" onchange="kategoriGuncelle(${kIndex}, 'resim', this.value); document.getElementById('k_img_${kIndex}').src=this.value;" placeholder="Veya URL Girin">
+                    </div>
+                    
+                    <h4>Ürünler</h4>
+                    ${urunlerHTML}
+                    <button class="btn btn-add-urun" onclick="urunEkle(${kIndex})">+ Bu Kategoriye Ürün Ekle</button>
+                </div>
+            `;
+        });
+    }
+
+    // Sıra Değiştirme Fonksiyonları
+    function kategoriTasi(kIndex, yon) {
+        const yeniIndex = kIndex + yon;
+        if (yeniIndex < 0 || yeniIndex >= localData.kategoriler.length) return;
+        const temp = localData.kategoriler[kIndex];
+        localData.kategoriler[kIndex] = localData.kategoriler[yeniIndex];
+        localData.kategoriler[yeniIndex] = temp;
+        adminEkraniCiz();
+    }
+
+    function urunTasi(kIndex, uIndex, yon) {
+        const urunler = localData.kategoriler[kIndex].urunler;
+        const yeniIndex = uIndex + yon;
+        if (yeniIndex < 0 || yeniIndex >= urunler.length) return;
+        const temp = urunler[uIndex];
+        urunler[uIndex] = urunler[yeniIndex];
+        urunler[yeniIndex] = temp;
+        adminEkraniCiz();
+    }
+
+    // Güncelleme Fonksiyonları
+    function kategoriGuncelle(kIndex, alan, deger) {
+        localData.kategoriler[kIndex][alan] = deger;
+    }
+
+    function urunGuncelle(kIndex, uIndex, alan, deger) {
+        localData.kategoriler[kIndex].urunler[uIndex][alan] = deger;
+    }
+
+    function kategoriEkle() {
+        if(!localData.kategoriler) localData.kategoriler = [];
+        localData.kategoriler.push({ ad: "Yeni Kategori", resim: "", urunler: [] });
+        adminEkraniCiz();
+    }
+
+    function kategoriSil(kIndex) {
+        if(confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğine emin misin kurbanım?")) {
+            localData.kategoriler.splice(kIndex, 1);
+            adminEkraniCiz();
+        }
+    }
+
+    function urunEkle(kIndex) {
+        if(!localData.kategoriler[kIndex].urunler) localData.kategoriler[kIndex].urunler = [];
+        localData.kategoriler[kIndex].urunler.push({ ad: "Yeni Ürün", fiyat: "0", resim: "" });
+        adminEkraniCiz();
+    }
+
+    function urunSil(kIndex, uIndex) {
+        localData.kategoriler[kIndex].urunler.splice(uIndex, 1);
+        adminEkraniCiz();
+    }
+
+    // Firebase'e Kaydetme
+    function verileriKaydet() {
+        try {
+            localData.pastaneAdi = document.getElementById('pastaneAdi').value;
+            localData.altBaslik = document.getElementById('altBaslik').value;
+            localData.bannerResmi = document.getElementById('bannerResmi').value;
+
+            alert("Veriler canlıya aktarılıyor kurbanım, bekle...");
+
+            db.ref('menu').set(localData)
+                .then(() => {
+                    alert("BAŞARILI! Tüm sıralama ve resimler canlı menüye aktarıldı kurbanım!");
+                })
+                .catch((error) => {
+                    alert("FİREBASE HATASI: " + error.code + "\nMesaj: " + error.message);
+                });
+        } catch (err) {
+            alert("KOD HATASI: " + err.message);
+        }
+    }
+
+    // Sayfa Açıldığında Verileri Getir
+    window.onload = function() {
+        verileriYukle();
+    };
+</script>
+
+</body>
+</html>
