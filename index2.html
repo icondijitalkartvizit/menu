@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe Menü & Yönetim Paneli</title>
+    <!-- Tailwind CSS ve FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP Animasyon Kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+    <!-- ÜST NAVİGASYON -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider text-amber-500"><i class="fa-solid fa-mug-hot mr-2"></i>LA VIE ILGIN</h1>
+            <div class="flex gap-3">
+                <button onclick="switchView('menu')" id="btnMenu" class="px-4 py-2 bg-amber-500 text-slate-950 font-semibold rounded-xl transition-all shadow-lg shadow-amber-500/20">Menü</button>
+                <button onclick="switchView('admin')" id="btnAdmin" class="px-4 py-2 bg-slate-800 text-slate-300 font-semibold rounded-xl transition-all hover:bg-slate-700">Yönetim Paneli</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MENÜ GÖRÜNÜMÜ -->
+    <main id="menuView" class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Kategori Kaydırma Alanı -->
+        <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-4 mb-8" id="categoryScrollContainer">
+            <!-- Dinamik Dolacak -->
+        </div>
+
+        <!-- Ürünler Listesi -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="productCardContainer">
+            <!-- Dinamik Dolacak -->
+        </div>
+    </main>
+
+    <!-- ADMIN PANELİ GÖRÜNÜMÜ -->
+    <main id="adminView" class="max-w-6xl mx-auto px-4 py-8 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sol: Kategori İşlemleri -->
+            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 h-fit">
+                <h2 class="text-lg font-bold mb-4 text-amber-500"><i class="fa-solid fa-layer-group mr-2"></i>Kategori Yönetimi</h2>
+                <form id="categoryForm" onsubmit="handleCategorySubmit(event)" class="space-y-4">
+                    <input type="hidden" id="catId">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Kategori Adı</label>
+                        <input type="text" id="catName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Sıra Numarası</label>
+                        <input type="number" id="catOrder" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-amber-500 text-slate-950 font-bold rounded-xl transition-all hover:bg-amber-400">Kategoriyi Kaydet</button>
+                </form>
+
+                <div class="mt-6 border-t border-slate-800 pt-4">
+                    <h3 class="text-sm font-semibold text-slate-400 mb-3">Mevcut Kategoriler</h3>
+                    <div id="adminCategoryList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Sağ: Ürün İşlemleri -->
+            <div class="lg:col-span-2 bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                <h2 class="text-lg font-bold mb-4 text-amber-500"><i class="fa-solid fa-utensils mr-2"></i>Ürün Yönetimi</h2>
+                <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
+                    <input type="hidden" id="prodId">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Ürün Adı</label>
+                            <input type="text" id="prodName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Kategori</label>
+                            <select id="prodCategory" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                                <!-- Dinamik Dolacak -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Fiyat (₺)</label>
+                            <input type="number" step="0.01" id="prodPrice" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Sıra Numarası</label>
+                            <input type="number" id="prodOrder" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Görsel URL</label>
+                        <input type="url" id="prodImage" placeholder="https://..." required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Açıklama</label>
+                        <textarea id="prodDesc" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-amber-500 text-slate-950 font-bold rounded-xl transition-all hover:bg-amber-400">Ürünü Kaydet</button>
+                </form>
+
+                <div class="mt-6 border-t border-slate-800 pt-4">
+                    <h3 class="text-sm font-semibold text-slate-400 mb-3">Mevcut Ürünler</h3>
+                    <div id="adminProductList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FIREBASE ENTEGRASYONU -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // BURAYA KENDİ FIREBASE KEY BİLGİLERİNİ GİR
+        const firebaseConfig = {
+            apiKey: "SENIN_API_KEY",
+            authDomain: "SENIN_AUTH_DOMAIN",
+            projectId: "SENIN_PROJECT_ID",
+            storageBucket: "SENIN_STORAGE_BUCKET",
+            messagingSenderId: "SENIN_MESSAGING_SENDER_ID",
+            appId: "SENIN_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let categories = [];
+        let products = [];
+        let activeCategory = null;
+
+        // Sayfa Yüklenince Verileri Çek
+        window.onload = async function() {
+            await loadData();
+        };
+
+        async function loadData() {
+            try {
+                // Kategorileri Çek
+                const catSnapshot = await getDocs(collection(db, "categories"));
+                categories = catSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                categories.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                // Ürünleri Çek
+                const prodSnapshot = await getDocs(collection(db, "products"));
+                products = prodSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                products.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                if (categories.length > 0 && !activeCategory) {
+                    activeCategory = categories[0].id;
+                }
+
+                renderMenu();
+                renderAdminPanel();
+            } catch (error) {
+                console.error("Veri yüklenirken hata oluştu: ", error);
+            }
+        }
+
+        // --- MENÜ RENDER VE ANİMASYONLAR ---
+        function renderMenu() {
+            const catContainer = document.getElementById('categoryScrollContainer');
+            const prodContainer = document.getElementById('productCardContainer');
+
+            catContainer.innerHTML = '';
+            prodContainer.innerHTML = '';
+
+            // Kategorileri Diz
+            categories.forEach(cat => {
+                const isActive = cat.id === activeCategory;
+                const btn = document.createElement('button');
+                btn.className = `px-6 py-3 rounded-2xl font-medium whitespace-nowrap transition-all duration-300 ${isActive ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800'}`;
+                btn.innerText = cat.name;
+                btn.onclick = () => {
+                    activeCategory = cat.id;
+                    renderMenu();
+                };
+                catContainer.appendChild(btn);
+            });
+
+            // Seçilen Kategoriye Ait Ürünleri Filtrele
+            const filteredProducts = products.filter(p => p.category === activeCategory);
+
+            if (filteredProducts.length === 0) {
+                prodContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">Bu kategoride henüz ürün bulunmuyor.</div>`;
+                return;
+            }
+
+            filteredProducts.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl hover:border-amber-500/50 transition-all duration-300 group';
+                card.innerHTML = `
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-amber-500 font-bold text-sm">
+                            ${prod.price} ₺
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-white mb-1">${prod.name}</h3>
+                        <p class="text-slate-400 text-sm line-clamp-2">${prod.description || ''}</p>
+                    </div>
+                `;
+                prodContainer.appendChild(card);
+            });
+
+            // GSAP Kaydırma Animasyonu
+            gsap.from("#productCardContainer > div", {
+                duration: 0.5,
+                opacity: 0,
+                y: 30,
+                stagger: 0.1,
+                ease: "power2.out"
+            });
+        }
+
+        // --- ADMIN PANELİ RENDER VE İŞLEMLER ---
+        function renderAdminPanel() {
+            const adminCatList = document.getElementById('adminCategoryList');
+            const adminProdList = document.getElementById('adminProductList');
+            const prodCategorySelect = document.getElementById('prodCategory');
+
+            adminCatList.innerHTML = '';
+            adminProdList.innerHTML = '';
+            prodCategorySelect.innerHTML = '';
+
+            // Kategori Seçim Alanını Doldur
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.innerText = `${cat.name} (Sıra: ${cat.order || 0})`;
+                prodCategorySelect.appendChild(opt);
+
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium text-white">${cat.name}</span>
+                        <span class="text-xs text-slate-500 ml-2">Sıra: ${cat.order || 0}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editCategory('${cat.id}', '${cat.name}', ${cat.order || 0})" class="text-amber-500 hover:text-amber-400 p-1"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteCategory('${cat.id}')" class="text-red-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                adminCatList.appendChild(div);
+            });
+
+            products.forEach(prod => {
+                const cat = categories.find(c => c.id === prod.category);
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${prod.image}" class="w-10 h-10 rounded-lg object-cover">
+                        <div>
+                            <span class="font-medium text-white">${prod.name}</span>
+                            <span class="text-xs text-slate-500 block">${cat ? cat.name : 'Kategori Yok'} - ${prod.price} ₺ (Sıra: ${prod.order || 0})</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editProduct('${prod.id}')" class="text-amber-500 hover:text-amber-400 p-1"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProduct('${prod.id}')" class="text-red-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                adminProdList.appendChild(div);
+            });
+        }
+
+        // Kategori Ekle/Güncelle
+        window.handleCategorySubmit = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('catId').value;
+            const name = document.getElementById('catName').value;
+            const order = parseInt(document.getElementById('catOrder').value) || 0;
+
+            if (id) {
+                await updateDoc(doc(db, "categories", id), { name, order });
+            } else {
+                await addDoc(collection(db, "categories"), { name, order });
+            }
+
+            document.getElementById('categoryForm').reset();
+            document.getElementById('catId').value = '';
+            await loadData();
+        }
+
+        window.editCategory = function(id, name, order) {
+            document.getElementById('catId').value = id;
+            document.getElementById('catName').value = name;
+            document.getElementById('catOrder').value = order;
+        }
+
+        window.deleteCategory = async function(id) {
+            if (confirm("Bu kategoriyi silmek istediğine emin misin?")) {
+                await deleteDoc(doc(db, "categories", id));
+                await loadData();
+            }
+        }
+
+        // Ürün Ekle/Güncelle
+        window.handleProductSubmit = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('prodId').value;
+            const name = document.getElementById('prodName').value;
+            const category = document.getElementById('prodCategory').value;
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const order = parseInt(document.getElementById('prodOrder').value) || 0;
+            const image = document.getElementById('prodImage').value;
+            const description = document.getElementById('prodDesc').value;
+
+            const productData = { name, category, price, order, image, description };
+
+            if (id) {
+                await updateDoc(doc(db, "products", id), productData);
+            } else {
+                await addDoc(collection(db, "products"), productData);
+            }
+
+            document.getElementById('productForm').reset();
+            document.getElementById('prodId').value = '';
+            await loadData();
+        }
+
+        window.editProduct = function(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+            document.getElementById('prodId').value = prod.id;
+            document.getElementById('prodName').value = prod.name;
+            document.getElementById('prodCategory').value = prod.category;
+            document.getElementById('prodPrice').value = prod.price;
+            document.getElementById('prodOrder').value = prod.order || 0;
+            document.getElementById('prodImage').value = prod.image;
+            document.getElementById('prodDesc').value = prod.description || '';
+        }
+
+        window.deleteProduct = async function(id) {
+            if (confirm("Bu ürünü silmek istediğine emin misin?")) {
+                await deleteDoc(doc(db, "products", id));
+                await loadData();
+            }
+        }
+
+        // Görünüm Değiştirici (Menü <-> Admin)
+        window.switchView = function(view) {
+            const menuView = document.getElementById('menuView');
+            const adminView = document.getElementById('adminView');
+            const btnMenu = document.getElementById('btnMenu');
+            const btnAdmin = document.getElementById('btnAdmin');
+
+            if (view === 'menu') {
+                menuView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                btnMenu.className = "px-4 py-2 bg-amber-500 text-slate-950 font-semibold rounded-xl transition-all shadow-lg shadow-amber-500/20";
+                btnAdmin.className = "px-4 py-2 bg-slate-800 text-slate-300 font-semibold rounded-xl transition-all hover:bg-slate-700";
+                renderMenu();
+            } else {
+                menuView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                btnAdmin.className = "px-4 py-2 bg-amber-500 text-slate-950 font-semibold rounded-xl transition-all shadow-lg shadow-amber-500/20";
+                btnMenu.className = "px-4 py-2 bg-slate-800 text-slate-300 font-semibold rounded-xl transition-all hover:bg-slate-700";
+            }
+        }
+    </script>
+</body>
+                          </html>
