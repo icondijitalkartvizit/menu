@@ -41,7 +41,7 @@
     </div>
 
     <h1>LA VIE - Menü Yönetim Paneli</h1>
-    <p>Kurbanım, kategorilerin ve ürünlerin sırasını "▲" ve "▼" butonlarıyla değiştirebilir, cihazından resim yükleyebilirsin.</p>
+    <p> Efendim, kategorilerin ve ürünlerin sırasını "▲" ve "▼" butonlarıyla değiştirebilir, cihazından resim yükleyebilirsiniz.</p>
 
     <!-- GENEL BİLGİLER -->
     <div class="section">
@@ -231,7 +231,7 @@
     }
 
     function kategoriSil(kIndex) {
-        if(confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğine emin misin kurbanım?")) {
+        if(confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğine emin misiniz?")) {
             localData.kategoriler.splice(kIndex, 1);
             adminEkraniCiz();
         }
@@ -259,7 +259,7 @@
 
             db.ref('menu').set(localData)
                 .then(() => {
-                    alert("BAŞARILI! Tüm sıralama ve resimler canlı menüye aktarıldı kurbanım!");
+                    alert("BAŞARILI! Tüm sıralama ve resimler canlı menüye aktarıldı efendim!");
                 })
                 .catch((error) => {
                     alert("FİREBASE HATASI: " + error.code + "\nMesaj: " + error.message);
